@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
   <title>Приглашение ❤️</title>
   <style>
+    /* ===== Все стили как в прошлом коде, но добавил стиль для гифки в результате ===== */
     * {
       margin: 0;
       padding: 0;
@@ -80,10 +81,8 @@
     .steps-wrapper {
       position: relative;
       min-height: 340px;
-      /* высота подстраивается под содержимое, но мы задаём фикс, чтобы не прыгало */
     }
 
-    /* ===== Новая логика шагов: все в потоке, но скрыты через opacity ===== */
     .step {
       display: block;
       width: 100%;
@@ -93,7 +92,7 @@
       pointer-events: none;
       transition: opacity 0.5s ease, visibility 0.5s ease;
       text-align: center;
-      position: absolute;   /* чтобы не занимали место, когда скрыты */
+      position: absolute;
       top: 0;
       left: 0;
     }
@@ -102,10 +101,9 @@
       opacity: 1;
       visibility: visible;
       pointer-events: auto;
-      position: relative;   /* возвращаем в поток, чтобы высота считалась */
+      position: relative;
     }
 
-    /* при затухании */
     .step.fade-out {
       opacity: 0;
       visibility: hidden;
@@ -240,6 +238,7 @@
     }
     .btn-submit:active { transform: scale(0.96); }
 
+    /* Блок результата */
     #result {
       margin-top: 24px;
       background: #e8f5e9;
@@ -251,17 +250,34 @@
       font-weight: 500;
       line-height: 1.6;
       box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-      text-align: left;
+      text-align: center;
     }
     #result.show { display: block; animation: fadeIn 0.5s ease; }
 
+    /* Контейнер для гифки в результатах */
+    .result-gif {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+    .result-gif img {
+      max-width: 160px;
+      width: 100%;
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+      background: #fff;
+      padding: 4px;
+    }
+
     .result-text {
       margin-bottom: 16px;
+      text-align: left;
     }
     .result-text strong {
       display: block;
       font-size: 1.1rem;
       margin-bottom: 8px;
+      text-align: center;
     }
     .result-actions {
       display: flex;
@@ -317,7 +333,8 @@
     @media (max-width: 420px) {
       .card { padding: 18px 14px 22px; }
       h1 { font-size: 1.6rem; }
-      .step .gif-container img { max-width: 130px; }
+      .step .gif-container img,
+      .result-gif img { max-width: 130px; }
       .checkbox-group { gap: 6px 14px; padding: 10px 14px; }
       .nav-buttons button { font-size: 0.9rem; padding: 12px 18px; min-height: 48px; }
       .btn-restart { padding: 12px 24px; font-size: 0.9rem; }
@@ -331,7 +348,7 @@
 
   <div class="card">
     <h1>💌 Приглашение 5 Июля</h1>
-    <div class="subtitle">Ты — моя радость, и я жду тебя!</div>
+    <div class="subtitle">Не важно сколько у нас было расставаний, главное что встреч всегда было на одну больше)</div>
 
     <div class="timer" id="timerDisplay">
       ⏳ <span id="days">0</span> дн <span id="hours">0</span> ч <span id="minutes">0</span> мин <span id="seconds">00</span> сек
@@ -379,7 +396,7 @@
             <img src="images/tea.gif" alt="Чай" />
           </div>
           <label for="drink">🥤 Что бы ты хотела попить?</label>
-          <input type="text" id="drink" placeholder="Чай, кофе, сок, лимонад..." />
+          <input type="text" id="drink" placeholder="Чай, кофе... кхм кхм" />
         </div>
 
         <!-- Шаг 4: Музыка -->
@@ -387,8 +404,8 @@
           <div class="gif-container">
             <img src="images/music.gif" alt="Музыка" />
           </div>
-          <label for="music">🎵 Есть ли пожелания по музыке?</label>
-          <input type="text" id="music" placeholder="Любимый исполнитель, плейлист, жанр..." />
+          <label for="music">🎵 Под какую песенку вас встречать?</label>
+          <input type="text" id="music" placeholder="Любимый исполнитель, плейлист, жанр.." />
         </div>
 
         <!-- Шаг 5: Особое пожелание -->
@@ -408,15 +425,17 @@
       </div>
     </form>
 
+    <!-- Блок результата с гифкой -->
     <div id="result">
+      <div class="result-gif">
+        <!-- Сюда можно вставить свою гифку, например, thanks.gif -->
+        <img src="images/thanks.gif" alt="Спасибо" id="resultGif" />
+      </div>
       <div class="result-text" id="resultText"></div>
       <div class="result-actions">
         <button class="btn-restart" id="btnRestart">🔄 Пройти заново</button>
       </div>
     </div>
-
-    <div class="footer-note">* Ответы сохраняются в браузере • можно закрыть и продолжить позже</div>
-  </div>
 
   <script>
     // ---------- Фоновые сердечки ----------
@@ -456,7 +475,7 @@
     updateTimer();
     setInterval(updateTimer, 1000);
 
-    // ---------- Новая плавная логика переключения шагов ----------
+    // ---------- Пошаговая логика ----------
     const steps = document.querySelectorAll('.step');
     const totalSteps = steps.length;
     let currentStep = 0;
@@ -469,7 +488,6 @@
     const resultText = document.getElementById('resultText');
 
     function updateUI() {
-      // Кнопки
       btnBack.style.display = currentStep === 0 ? 'none' : 'inline-block';
       if (currentStep === totalSteps - 1) {
         btnNext.style.display = 'none';
@@ -478,8 +496,6 @@
         btnNext.style.display = 'inline-block';
         btnSubmit.style.display = 'none';
       }
-
-      // Валидация для первого шага
       if (currentStep === 0) {
         const timeSelect = document.getElementById('timeSelect');
         btnNext.disabled = !timeSelect.value;
@@ -497,93 +513,20 @@
       if (newStep < 0 || newStep >= totalSteps || newStep === currentStep) return;
 
       isTransitioning = true;
-
       const oldStep = steps[currentStep];
       const newStepEl = steps[newStep];
 
-      // 1. Старый шаг затухает
-      oldStep.classList.remove('active');
-      oldStep.classList.add('fade-out');
-      // Теперь он станет невидимым, но останется в потоке (position:absolute)
-
-      // 2. После задержки показываем новый
-      setTimeout(() => {
-        // Убираем fade-out у старого, чтобы он был готов к повторному показу
-        oldStep.classList.remove('fade-out');
-        // Старый больше не absolute? Он останется absolute, так как все шаги absolute,
-        // но активный становится relative, поэтому он выпадает из потока, а новый займёт его место.
-
-        // Новый шаг: делаем его видимым
-        newStepEl.classList.remove('fade-out'); // на всякий случай
-        // Устанавливаем opacity:0, visibility:visible, position:absolute, чтобы он встал на место старого
-        newStepEl.style.opacity = '0';
-        newStepEl.style.visibility = 'visible';
-        newStepEl.style.position = 'absolute';
-        // Принудительно запускаем reflow, чтобы transition сработал
-        void newStepEl.offsetWidth;
-
-        // Добавляем класс active, который сделает opacity:1 и position:relative
-        newStepEl.classList.add('active');
-        // Теперь он станет видимым и займёт место в потоке
-
-        // Обновляем currentStep
-        currentStep = newStep;
-        updateUI();
-        isTransitioning = false;
-
-        // После того как новый шаг стал активным, убираем явные стили, чтобы они не мешали
-        // (они переопределятся классами)
-        newStepEl.style.opacity = '';
-        newStepEl.style.visibility = '';
-        newStepEl.style.position = '';
-
-        // Также нужно убедиться, что старый шаг не мешает: он остаётся absolute и скрыт через visibility: hidden
-        // Но он уже имеет класс fade-out, который даёт visibility:hidden
-        // Однако мы удалили fade-out, поэтому старый шаг может стать видимым.
-        // Поэтому после переключения мы должны убедиться, что старый шаг скрыт.
-        // Самый простой способ: для всех неактивных шагов принудительно задать opacity:0, visibility:hidden.
-        // Но мы можем сделать это через CSS: .step:not(.active) { opacity: 0; visibility: hidden; pointer-events: none; }
-        // Это проще. Давайте добавим такое правило в CSS.
-      }, 400); // время затухания
-    }
-
-    // Дополним CSS правилом для всех неактивных шагов (без JS)
-    // Оно уже есть в стилях: .step (по умолчанию) имеет opacity:0, visibility:hidden.
-    // А .step.active имеет opacity:1, visibility:visible.
-    // Но нам нужно, чтобы при переключении старый шаг не оставался видимым после удаления класса active.
-    // Это автоматически сработает, так как CSS применяется.
-
-    // Однако в нашей функции мы вручную меняем opacity и visibility, чтобы обеспечить плавность.
-    // После переключения новые стили должны быть сброшены, чтобы классы работали.
-    // Я переписал функцию goToStep более аккуратно.
-
-    // Перепишем goToStep (упростим):
-    function goToStep(newStep) {
-      if (isTransitioning) return;
-      if (newStep < 0 || newStep >= totalSteps || newStep === currentStep) return;
-
-      isTransitioning = true;
-      const oldStep = steps[currentStep];
-      const newStepEl = steps[newStep];
-
-      // Старый шаг: убираем active, добавляем fade-out (он станет невидимым)
       oldStep.classList.remove('active');
       oldStep.classList.add('fade-out');
 
-      // Новый шаг: готовим к появлению
       newStepEl.classList.remove('fade-out');
-      // Убедимся, что он скрыт
       newStepEl.style.opacity = '0';
       newStepEl.style.visibility = 'visible';
       newStepEl.style.position = 'absolute';
 
-      // Ждём окончания анимации старого (400ms)
       setTimeout(() => {
-        // Убираем fade-out у старого (он уже невидим)
         oldStep.classList.remove('fade-out');
-        // Показываем новый
         newStepEl.classList.add('active');
-        // Сбрасываем инлайн-стили
         newStepEl.style.opacity = '';
         newStepEl.style.visibility = '';
         newStepEl.style.position = '';
@@ -594,7 +537,6 @@
       }, 400);
     }
 
-    // Остальные функции без изменений
     function nextStep() {
       if (isTransitioning) return;
       if (currentStep === totalSteps - 1) return;
@@ -616,7 +558,7 @@
     btnNext.addEventListener('click', nextStep);
     btnBack.addEventListener('click', prevStep);
 
-    // ---------- Сохранение и загрузка прогресса ----------
+    // ---------- Сохранение и загрузка ----------
     function saveProgress() {
       const data = {
         currentStep: currentStep,
@@ -636,14 +578,12 @@
       try {
         const data = JSON.parse(saved);
         if (data.currentStep !== undefined) {
-          // Скрываем все шаги
           steps.forEach((step, idx) => {
             step.classList.remove('active', 'fade-out');
             step.style.opacity = '0';
             step.style.visibility = 'hidden';
             step.style.position = 'absolute';
           });
-          // Показываем нужный
           const target = steps[data.currentStep];
           target.classList.add('active');
           target.style.opacity = '';
