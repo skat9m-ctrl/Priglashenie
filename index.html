@@ -626,12 +626,27 @@
       const special = document.getElementById('special').value.trim() || 'нет';
 
       const answersHtml = `
-        🕒 <strong>Время:</strong> ${time}<br />
-        🍬 <strong>Вкусняшки:</strong> ${treats.length ? treats.join(', ') : 'не выбрано'}<br />
-        🥤 <strong>Напиток:</strong> ${drink}<br />
-        🎵 <strong>Музыка:</strong> ${music}<br />
-        💝 <strong>Особое пожелание:</strong> ${special}
-      `;
+  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+    <span style="font-size: 1.8rem;">🕒</span>
+    <div><strong>Время:</strong> ${time}</div>
+  </div>
+  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+    <span style="font-size: 1.8rem;">🍬</span>
+    <div><strong>Вкусняшки:</strong> ${treats.length ? treats.join(', ') : 'не выбрано'}</div>
+  </div>
+  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+    <span style="font-size: 1.8rem;">🥤</span>
+    <div><strong>Напиток:</strong> ${drink}</div>
+  </div>
+  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+    <span style="font-size: 1.8rem;">🎵</span>
+    <div><strong>Музыка:</strong> ${music}</div>
+  </div>
+  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+    <span style="font-size: 1.8rem;">💝</span>
+    <div><strong>Особое пожелание:</strong> ${special}</div>
+  </div>
+`;
 
       resultText.innerHTML = `
         <strong>✨ Ты ответила! ✨</strong><br /><br />
