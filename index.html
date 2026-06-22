@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+  <title>Приглашение ❤️</title>
+  <style>
+    /* ===== Все стили как в прошлом коде, но добавил стиль для гифки в результате ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #fce4ec, #f8bbd0);
+      padding: 16px;
+      position: relative;
+    }
+
+    .card {
+      max-width: 480px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      border-radius: 32px;
+      padding: 24px 20px 28px;
+      box-shadow: 0 16px 48px rgba(233, 30, 99, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      animation: fadeIn 0.6s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #ad1457;
+      text-align: center;
+      margin-bottom: 2px;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 0.95rem;
+      color: #6d4c41;
+      margin-bottom: 12px;
+      border-bottom: 2px dashed #f48fb1;
+      padding-bottom: 10px;
+    }
+
+    .timer {
+      background: #fce4ec;
+      border-radius: 40px;
+      padding: 8px 14px;
+      text-align: center;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #880e4f;
+      margin-bottom: 20px;
+      box-shadow: inset 0 2px 6px rgba(233, 30, 99, 0.08);
+    }
+
+    .timer span {
+      background: #ad1457;
+      color: white;
+      padding: 2px 10px;
+      border-radius: 20px;
+      margin: 0 2px;
+    }
+
+    .steps-wrapper {
+      position: relative;
+      min-height: 340px;
+    }
+
+    .step {
+      display: block;
+      width: 100%;
+      padding: 4px 2px;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+      text-align: center;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .step.active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      position: relative;
+    }
+
+    .step.fade-out {
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+    }
+
+    .step .gif-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .step .gif-container img {
+      max-width: 160px;
+      width: 100%;
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+      background: #fff;
+      padding: 4px;
+    }
+
+    .step label {
+      display: block;
+      font-weight: 600;
+      color: #4a148c;
+      font-size: 1.05rem;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    select, input[type="text"] {
+      display: block;
+      width: auto;
+      min-width: 160px;
+      max-width: 100%;
+      padding: 12px 18px;
+      margin: 0 auto 8px auto;
+      border: 2px solid #f48fb1;
+      border-radius: 30px;
+      font-size: 1rem;
+      background: white;
+      transition: 0.2s;
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    select:focus, input:focus {
+      border-color: #ad1457;
+      box-shadow: 0 0 0 4px rgba(173, 20, 87, 0.08);
+    }
+
+    .checkbox-group {
+      display: inline-flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px 20px;
+      background: #fff5f7;
+      padding: 12px 18px;
+      border-radius: 28px;
+      border: 2px solid #f8bbd0;
+      margin: 0 auto 10px auto;
+      width: auto;
+      max-width: 100%;
+    }
+
+    .checkbox-group label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+      color: #4a148c;
+      cursor: pointer;
+      font-size: 0.95rem;
+      text-align: left;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #ad1457;
+      cursor: pointer;
+    }
+
+    .step .other-input {
+      margin-top: 8px;
+    }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .nav-buttons button {
+      padding: 14px 24px;
+      border: none;
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.2s;
+      flex: 0 1 auto;
+      min-height: 56px;
+      touch-action: manipulation;
+    }
+
+    .btn-back {
+      background: #f8bbd0;
+      color: #4a148c;
+    }
+    .btn-back:hover { background: #f48fb1; }
+
+    .btn-next {
+      background: linear-gradient(45deg, #ad1457, #d81b60);
+      color: white;
+      box-shadow: 0 4px 14px rgba(173, 20, 87, 0.25);
+    }
+    .btn-next:active { transform: scale(0.96); }
+    .btn-next:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .btn-submit {
+      background: linear-gradient(45deg, #2e7d32, #43a047);
+      color: white;
+      box-shadow: 0 4px 14px rgba(46, 125, 50, 0.25);
+      flex: 0 1 auto;
+    }
+    .btn-submit:active { transform: scale(0.96); }
+
+    /* Блок результата */
+    #result {
+      margin-top: 24px;
+      background: #e8f5e9;
+      border-radius: 28px;
+      padding: 18px 22px;
+      display: none;
+      border-left: 6px solid #2e7d32;
+      color: #1b5e20;
+      font-weight: 500;
+      line-height: 1.6;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+      text-align: center;
+    }
+    #result.show { display: block; animation: fadeIn 0.5s ease; }
+
+    /* Контейнер для гифки в результатах */
+    .result-gif {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+    .result-gif img {
+      max-width: 160px;
+      width: 100%;
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+      background: #fff;
+      padding: 4px;
+    }
+
+    .result-text {
+      margin-bottom: 16px;
+      text-align: left;
+    }
+    .result-text strong {
+      display: block;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+    .result-actions {
+      display: flex;
+      justify-content: center;
+      margin-top: 12px;
+    }
+    .btn-restart {
+      background: #d81b60;
+      color: white;
+      padding: 14px 32px;
+      border: none;
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(216, 27, 96, 0.3);
+      transition: 0.2s;
+      touch-action: manipulation;
+    }
+    .btn-restart:active { transform: scale(0.96); }
+
+    .footer-note {
+      margin-top: 18px;
+      text-align: center;
+      color: #8d6e63;
+      font-size: 0.78rem;
+      opacity: 0.7;
+    }
+
+    .hearts {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+      overflow: hidden;
+    }
+    .heart {
+      position: absolute;
+      font-size: 1.4rem;
+      color: rgba(233, 30, 99, 0.06);
+      animation: floatHeart 22s infinite linear;
+    }
+    @keyframes floatHeart {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+    }
+
+    @media (max-width: 420px) {
+      .card { padding: 18px 14px 22px; }
+      h1 { font-size: 1.6rem; }
+      .step .gif-container img,
+      .result-gif img { max-width: 130px; }
+      .checkbox-group { gap: 6px 14px; padding: 10px 14px; }
+      .nav-buttons button { font-size: 0.9rem; padding: 12px 18px; min-height: 48px; }
+      .btn-restart { padding: 12px 24px; font-size: 0.9rem; }
+      select, input[type="text"] { min-width: 120px; padding: 10px 14px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hearts" id="heartsContainer"></div>
+
+  <div class="card">
+    <h1>💌 Приглашение 5 Июля</h1>
+    <div class="subtitle">Не важно сколько у нас было расставаний, главное что встреч всегда было на одну больше)</div>
+
+    <div class="timer" id="timerDisplay">
+      ⏳ <span id="days">0</span> дн <span id="hours">0</span> ч <span id="minutes">0</span> мин <span id="seconds">00</span> сек
+    </div>
+
+    <form id="inviteForm">
+      <div class="steps-wrapper" id="stepsWrapper">
+        <!-- Шаг 1: Время -->
+        <div class="step active" data-step="0">
+          <div class="gif-container">
+            <img src="images/cake.gif" alt="Котик" />
+          </div>
+          <label for="timeSelect">🕒 Во сколько ты сможешь прийти?</label>
+          <select id="timeSelect" required>
+            <option value="">Выбери время...</option>
+            <option value="9:00">9:00</option>
+            <option value="9:30">9:30</option>
+            <option value="10:00">10:00</option>
+            <option value="10:30">10:30</option>
+            <option value="11:00">11:00</option>
+            <option value="11:30">11:30</option>
+            <option value="12:00">12:00</option>
+          </select>
+        </div>
+
+        <!-- Шаг 2: Вкусняшки -->
+        <div class="step" data-step="1">
+          <div class="gif-container">
+            <img src="images/cake.gif" alt="Торт" />
+          </div>
+          <label>🍰 Какие вкусняшки тебе купить? (можно несколько)</label>
+          <div class="checkbox-group">
+            <label><input type="checkbox" value="шоколадку" /> Шоколадку</label>
+            <label><input type="checkbox" value="чипсеков" /> Чипсеков</label>
+            <label><input type="checkbox" value="фруктиков" /> Фруктиков</label>
+            <label><input type="checkbox" value="мороженко" /> Мороженко</label>
+            <label><input type="checkbox" value="другое" /> Своё</label>
+          </div>
+          <input type="text" id="otherTreat" class="other-input" placeholder="Если выбрала 'Своё', напиши что..." />
+        </div>
+
+        <!-- Шаг 3: Напиток -->
+        <div class="step" data-step="2">
+          <div class="gif-container">
+            <img src="images/tea.gif" alt="Чай" />
+          </div>
+          <label for="drink">🥤 Что бы ты хотела попить?</label>
+          <input type="text" id="drink" placeholder="Чай, кофе... кхм кхм" />
+        </div>
+
+        <!-- Шаг 4: Музыка -->
+        <div class="step" data-step="3">
+          <div class="gif-container">
+            <img src="images/music.gif" alt="Музыка" />
+          </div>
+          <label for="music">🎵 Под какую песенку вас встречать?</label>
+          <input type="text" id="music" placeholder="Любимый исполнитель, плейлист, жанр.." />
+        </div>
+
+        <!-- Шаг 5: Особое пожелание -->
+        <div class="step" data-step="4">
+          <div class="gif-container">
+            <img src="images/hug.gif" alt="Объятия" />
+          </div>
+          <label for="special">💝 Может, у тебя есть особое пожелание?</label>
+          <input type="text" id="special" placeholder="Что-то, что сделает вечер незабываемым..." />
+        </div>
+      </div>
+
+      <div class="nav-buttons">
+        <button type="button" class="btn-back" id="btnBack" style="display:none;">⬅ Назад</button>
+        <button type="button" class="btn-next" id="btnNext">Далее ➡</button>
+        <button type="submit" class="btn-submit" id="btnSubmit" style="display:none;">❤️ Отправить ❤️</button>
+      </div>
+    </form>
+
+    <!-- Блок результата с гифкой -->
+    <div id="result">
+      <div class="result-gif">
+        <!-- Сюда можно вставить свою гифку, например, thanks.gif -->
+        <img src="images/thanks.gif" alt="Спасибо" id="resultGif" />
+      </div>
+      <div class="result-text" id="resultText"></div>
+      <div class="result-actions">
+        <button class="btn-restart" id="btnRestart">🔄 Пройти заново</button>
+      </div>
+    </div>
+
+  <script>
+    // ---------- Фоновые сердечки ----------
+    (function createHearts() {
+      const container = document.getElementById('heartsContainer');
+      const symbols = ['♥', '❤', '💕', '💗', '💖'];
+      for (let i = 0; i < 18; i++) {
+        const heart = document.createElement('span');
+        heart.className = 'heart';
+        heart.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        heart.style.left = Math.random() * 100 + '%';
+        heart.style.fontSize = (1 + Math.random() * 2) + 'rem';
+        heart.style.animationDuration = (18 + Math.random() * 25) + 's';
+        heart.style.animationDelay = (Math.random() * 20) + 's';
+        container.appendChild(heart);
+      }
+    })();
+
+    // ---------- Таймер с секундами (дата 05.07.2026) ----------
+    function updateTimer() {
+      const target = new Date('2026-07-04T22:00:00').getTime();
+      const now = Date.now();
+      let diff = target - now;
+      if (diff <= 0) {
+        document.getElementById('timerDisplay').innerHTML = '🎉 Сегодня! Жду с нетерпением!';
+        return;
+      }
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+      document.getElementById('days').textContent = days;
+      document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+      document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+      document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+    }
+    updateTimer();
+    setInterval(updateTimer, 1000);
+
+    // ---------- Пошаговая логика ----------
+    const steps = document.querySelectorAll('.step');
+    const totalSteps = steps.length;
+    let currentStep = 0;
+    let isTransitioning = false;
+
+    const btnBack = document.getElementById('btnBack');
+    const btnNext = document.getElementById('btnNext');
+    const btnSubmit = document.getElementById('btnSubmit');
+    const resultDiv = document.getElementById('result');
+    const resultText = document.getElementById('resultText');
+
+    function updateUI() {
+      btnBack.style.display = currentStep === 0 ? 'none' : 'inline-block';
+      if (currentStep === totalSteps - 1) {
+        btnNext.style.display = 'none';
+        btnSubmit.style.display = 'inline-block';
+      } else {
+        btnNext.style.display = 'inline-block';
+        btnSubmit.style.display = 'none';
+      }
+      if (currentStep === 0) {
+        const timeSelect = document.getElementById('timeSelect');
+        btnNext.disabled = !timeSelect.value;
+        timeSelect.addEventListener('change', () => {
+          btnNext.disabled = !timeSelect.value;
+        });
+      } else {
+        btnNext.disabled = false;
+      }
+      saveProgress();
+    }
+
+    function goToStep(newStep) {
+      if (isTransitioning) return;
+      if (newStep < 0 || newStep >= totalSteps || newStep === currentStep) return;
+
+      isTransitioning = true;
+      const oldStep = steps[currentStep];
+      const newStepEl = steps[newStep];
+
+      oldStep.classList.remove('active');
+      oldStep.classList.add('fade-out');
+
+      newStepEl.classList.remove('fade-out');
+      newStepEl.style.opacity = '0';
+      newStepEl.style.visibility = 'visible';
+      newStepEl.style.position = 'absolute';
+
+      setTimeout(() => {
+        oldStep.classList.remove('fade-out');
+        newStepEl.classList.add('active');
+        newStepEl.style.opacity = '';
+        newStepEl.style.visibility = '';
+        newStepEl.style.position = '';
+
+        currentStep = newStep;
+        updateUI();
+        isTransitioning = false;
+      }, 400);
+    }
+
+    function nextStep() {
+      if (isTransitioning) return;
+      if (currentStep === totalSteps - 1) return;
+      if (currentStep === 0) {
+        const timeSelect = document.getElementById('timeSelect');
+        if (!timeSelect.value) {
+          alert('Пожалуйста, выбери время 😊');
+          return;
+        }
+      }
+      goToStep(currentStep + 1);
+    }
+
+    function prevStep() {
+      if (isTransitioning) return;
+      goToStep(currentStep - 1);
+    }
+
+    btnNext.addEventListener('click', nextStep);
+    btnBack.addEventListener('click', prevStep);
+
+    // ---------- Сохранение и загрузка ----------
+    function saveProgress() {
+      const data = {
+        currentStep: currentStep,
+        time: document.getElementById('timeSelect').value,
+        treats: Array.from(document.querySelectorAll('.checkbox-group input[type="checkbox"]:checked')).map(cb => cb.value),
+        otherTreat: document.getElementById('otherTreat').value,
+        drink: document.getElementById('drink').value,
+        music: document.getElementById('music').value,
+        special: document.getElementById('special').value
+      };
+      localStorage.setItem('inviteWizard', JSON.stringify(data));
+    }
+
+    function loadProgress() {
+      const saved = localStorage.getItem('inviteWizard');
+      if (!saved) return;
+      try {
+        const data = JSON.parse(saved);
+        if (data.currentStep !== undefined) {
+          steps.forEach((step, idx) => {
+            step.classList.remove('active', 'fade-out');
+            step.style.opacity = '0';
+            step.style.visibility = 'hidden';
+            step.style.position = 'absolute';
+          });
+          const target = steps[data.currentStep];
+          target.classList.add('active');
+          target.style.opacity = '';
+          target.style.visibility = '';
+          target.style.position = '';
+          currentStep = data.currentStep;
+
+          if (data.time) document.getElementById('timeSelect').value = data.time;
+          if (data.treats && data.treats.length) {
+            const checkboxes = document.querySelectorAll('.checkbox-group input[type="checkbox"]');
+            checkboxes.forEach(cb => {
+              if (data.treats.includes(cb.value)) cb.checked = true;
+            });
+          }
+          if (data.otherTreat) document.getElementById('otherTreat').value = data.otherTreat;
+          if (data.drink) document.getElementById('drink').value = data.drink;
+          if (data.music) document.getElementById('music').value = data.music;
+          if (data.special) document.getElementById('special').value = data.special;
+        }
+      } catch (e) {}
+      updateUI();
+    }
+
+    document.querySelectorAll('input, select').forEach(el => {
+      el.addEventListener('change', saveProgress);
+      el.addEventListener('input', saveProgress);
+    });
+
+    // ---------- Отправка ----------
+    document.getElementById('inviteForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const time = document.getElementById('timeSelect').value;
+      const checkboxes = document.querySelectorAll('.checkbox-group input[type="checkbox"]:checked');
+      let treats = Array.from(checkboxes).map(cb => cb.value);
+      const other = document.getElementById('otherTreat').value.trim();
+      if (other) treats.push(other);
+      const drink = document.getElementById('drink').value.trim() || 'не указано';
+      const music = document.getElementById('music').value.trim() || 'не указано';
+      const special = document.getElementById('special').value.trim() || 'нет';
+
+      const answersHtml = `
+  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+    <span style="font-size: 1.8rem;">🕒</span>
+    <div><strong>Время:</strong> ${time}</div>
+  </div>
+  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+    <span style="font-size: 1.8rem;">🍬</span>
+    <div><strong>Вкусняшки:</strong> ${treats.length ? treats.join(', ') : 'не выбрано'}</div>
+  </div>
+  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+    <span style="font-size: 1.8rem;">🥤</span>
+    <div><strong>Напиток:</strong> ${drink}</div>
+  </div>
+  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+    <span style="font-size: 1.8rem;">🎵</span>
+    <div><strong>Музыка:</strong> ${music}</div>
+  </div>
+  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+    <span style="font-size: 1.8rem;">💝</span>
+    <div><strong>Особое пожелание:</strong> ${special}</div>
+  </div>
+`;
+
+      resultText.innerHTML = `
+        <strong>✨ Ты ответила! ✨</strong><br /><br />
+        ${answersHtml}<br /><br />
+        <span style="color:#2e7d32;">Если всё правильно, отправь скриншот этой страницы мне в ЛС, если хочешь что-то изменить, нажми на кнопку "Пройти заново"</span>
+      `;
+      resultDiv.classList.add('show');
+
+      document.getElementById('stepsWrapper').style.display = 'none';
+      document.querySelector('.nav-buttons').style.display = 'none';
+      btnSubmit.disabled = true;
+    });
+
+    // ---------- Кнопка "Пройти заново" ----------
+    document.getElementById('btnRestart').addEventListener('click', function() {
+      localStorage.removeItem('inviteWizard');
+      document.getElementById('timeSelect').value = '';
+      document.querySelectorAll('.checkbox-group input[type="checkbox"]').forEach(cb => cb.checked = false);
+      document.getElementById('otherTreat').value = '';
+      document.getElementById('drink').value = '';
+      document.getElementById('music').value = '';
+      document.getElementById('special').value = '';
+
+      resultDiv.classList.remove('show');
+      document.getElementById('stepsWrapper').style.display = 'block';
+      document.querySelector('.nav-buttons').style.display = 'flex';
+
+      steps.forEach((step, idx) => {
+        step.classList.remove('active', 'fade-out');
+        step.style.opacity = '0';
+        step.style.visibility = 'hidden';
+        step.style.position = 'absolute';
+      });
+      const firstStep = steps[0];
+      firstStep.classList.add('active');
+      firstStep.style.opacity = '';
+      firstStep.style.visibility = '';
+      firstStep.style.position = '';
+      currentStep = 0;
+      btnSubmit.disabled = false;
+      updateUI();
+      document.querySelector('.card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    // ---------- Инициализация ----------
+    loadProgress();
+    if (!localStorage.getItem('inviteWizard')) {
+      steps.forEach((step, idx) => {
+        if (idx === 0) {
+          step.classList.add('active');
+          step.style.opacity = '';
+          step.style.visibility = '';
+          step.style.position = '';
+        } else {
+          step.classList.remove('active');
+          step.style.opacity = '0';
+          step.style.visibility = 'hidden';
+          step.style.position = 'absolute';
+        }
+      });
+      currentStep = 0;
+      updateUI();
+    }
+  </script>
+</body>
+</html>
