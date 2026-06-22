@@ -359,7 +359,7 @@
         <!-- Шаг 1: Время -->
         <div class="step active" data-step="0">
           <div class="gif-container">
-            <img src="images/cat.gif" alt="Котик" />
+            <img src="images/cake.gif" alt="Котик" />
           </div>
           <label for="timeSelect">🕒 Во сколько ты сможешь прийти?</label>
           <select id="timeSelect" required>
@@ -456,7 +456,7 @@
 
     // ---------- Таймер с секундами (дата 05.07.2026) ----------
     function updateTimer() {
-      const target = new Date('2026-07-05T00:00:00').getTime();
+      const target = new Date('2026-07-05T02:00:00').getTime();
       const now = Date.now();
       let diff = target - now;
       if (diff <= 0) {
